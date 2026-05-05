@@ -1,0 +1,112 @@
+<script setup>
+import { ref } from 'vue'
+import AppLogo from '~/components/AppLogo.vue'
+
+const menuOpen = ref(false)
+</script>
+
+<template>
+  <header class="absolute top-0 left-0 right-0 z-50 px-6 py-4">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between">
+      <AppLogo />
+
+      <!-- Desktop nav links -->
+      <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
+        <li>
+          <a href="#"
+             class="font-semibold text-brand-indigo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="#"
+             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+            About Us
+          </a>
+        </li>
+        <li>
+          <a href="#"
+             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+            Docs
+          </a>
+        </li>
+        <li>
+          <a href="#"
+             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+            Pricing
+          </a>
+        </li>
+      </ul>
+
+      <!-- Desktop CTA button -->
+      <a href="#"
+         class="hidden md:inline-flex bg-brand-indigo text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
+        Get Started
+      </a>
+
+      <!-- Hamburger button -->
+      <button
+        class="md:hidden p-2 rounded-md text-brand-indigo hover:bg-white/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
+        aria-label="Toggle navigation menu"
+        :aria-expanded="menuOpen"
+        @click="menuOpen = !menuOpen"
+      >
+        <!-- Hamburger icon -->
+        <svg v-if="!menuOpen" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <line x1="3" y1="6" x2="19" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="3" y1="11" x2="19" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="3" y1="16" x2="19" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <!-- X icon -->
+        <svg v-else width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <line x1="4" y1="4" x2="18" y2="18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="18" y1="4" x2="4" y2="18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile menu -->
+    <Transition name="mobile-menu">
+      <div v-if="menuOpen"
+           class="md:hidden mt-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/60 overflow-hidden">
+        <ul class="flex flex-col py-2 list-none m-0 p-0">
+          <li>
+            <a href="#"
+               class="block px-6 py-3 text-sm font-semibold text-brand-indigo hover:bg-brand-lavender transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-indigo"
+               @click="menuOpen = false">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="#"
+               class="block px-6 py-3 text-sm text-gray-600 hover:bg-brand-lavender transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-indigo"
+               @click="menuOpen = false">
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="#"
+               class="block px-6 py-3 text-sm text-gray-600 hover:bg-brand-lavender transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-indigo"
+               @click="menuOpen = false">
+              Docs
+            </a>
+          </li>
+          <li>
+            <a href="#"
+               class="block px-6 py-3 text-sm text-gray-600 hover:bg-brand-lavender transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-indigo"
+               @click="menuOpen = false">
+              Pricing
+            </a>
+          </li>
+          <li class="px-6 py-3">
+            <a href="#"
+               class="block bg-brand-indigo text-white rounded-lg text-center text-sm font-medium py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
+               @click="menuOpen = false">
+              Get Started
+            </a>
+          </li>
+        </ul>
+      </div>
+    </Transition>
+  </header>
+</template>

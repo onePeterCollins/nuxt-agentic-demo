@@ -9,50 +9,63 @@
 
 ## Authority and required reading
 
-This file is subordinate to `CLAUDE.md` (v1.1.0). When any instruction here conflicts
+This file is subordinate to `CLAUDE.md` (v1.2.0). When any instruction here conflicts
 with a rule in `CLAUDE.md`, `CLAUDE.md` wins. The agent must report the conflict before
 proceeding — not resolve it silently.
 
-Before executing any task, the agent must complete the pre-flight checklist in
-**CLAUDE.md Section 4.1**. Every task ends with a structured report per
-**CLAUDE.md Section 4.4**, followed by a commit per **CLAUDE.md Section 3.8**.
-A task is not complete until every acceptance criterion is ✅.
+Before executing any task, the agent must follow the full Task Execution Protocol in
+**CLAUDE.md Section 4** — branch creation (4.1), pre-flight (4.2), implementation (4.3),
+self-verification (4.4), report (4.5), commit (4.6), push (4.7), PR creation (4.8), and
+halt (4.9). A task is not complete until every acceptance criterion is ✅ and the PR is
+created and its URL reported.
 
 ---
 
 ## How to use this manifest
 
 Each task is a discrete unit of work. Paste the full task block into a Claude Code session
-or use it as a GitHub Copilot Workspace prompt. Tasks must be executed in dependency order —
-do not start a task until all listed dependencies are ✅.
+or use it as a GitHub Copilot Workspace prompt.
 
-The acceptance criteria are the definition of done. The agent self-verifies against
-every criterion (CLAUDE.md Section 4.3) and outputs a report (CLAUDE.md Section 4.4)
-before committing. Failing criteria block the commit.
+**Dependency means PR merged.** A task may not begin until every task it depends on has
+its PR merged to `main`. "✅ complete" in the Depends On column means merged, not just
+implemented. The orchestrator confirms each merge before the next task starts.
+
+**Sequential execution.** Although several tasks share the same dependency (T-03), the
+one-PR-at-a-time constraint enforces sequential execution. The recommended order follows
+the task numbering: T-00 → T-01 → T-02 → … → T-16.
+
+The acceptance criteria are the definition of done. The agent self-verifies against every
+criterion (CLAUDE.md Section 4.4), writes a report (CLAUDE.md Section 4.5), commits
+(CLAUDE.md Section 4.6), pushes the branch (CLAUDE.md Section 4.7), creates a PR against
+`main` via `gh pr create` (CLAUDE.md Section 4.8), and halts (CLAUDE.md Section 4.9).
+Failing criteria block the commit. Missing PR blocks task completion.
 
 ---
 
 ## Task Index
 
-| ID | Title | Depends On | Est. |
-|----|-------|------------|------|
-| T-00 | Persona bootstrap | — | 10 min |
-| T-01 | Project scaffold & config | T-00 | 15 min |
-| T-02 | Design token system | T-01 | 10 min |
-| T-03 | Global CSS baseline & shared components | T-02 | 20 min |
-| T-04 | AppNav + AppLogo with mobile toggle | T-03 | 25 min |
-| T-05 | Hero section | T-03 | 30 min |
-| T-06 | AI Features section | T-03 | 25 min |
-| T-07 | Community-Driven section | T-03 | 25 min |
-| T-08 | ROI Dashboard section | T-03 | 25 min |
-| T-09 | Comparison Table section | T-03 | 20 min |
-| T-10 | Pricing section | T-03 | 15 min |
-| T-11 | Use Cases section | T-03, T-06 | 25 min |
-| T-12 | CTA Banner + Footer | T-03, T-04 | 20 min |
-| T-13 | Responsiveness pass | T-04–T-12 | 30 min |
-| T-14 | Accessibility pass | T-04–T-12 | 20 min |
-| T-15 | Firebase deploy config | T-01 | 10 min |
-| T-16 | README + pixelay/notes.md | T-15 | 15 min |
+> **Depends On** = all listed tasks must have their PRs **merged to main** before this task begins.
+> **Branch** = exact branch name to cut from main at the start of this task (T-02 onwards).
+
+| ID | Title | Depends On | Branch | Est. |
+|----|-------|------------|--------|------|
+| T-00 | Persona bootstrap | — | *(no branch — orchestrator setup)* | 10 min |
+| T-01 | Project scaffold & config | T-00 | *(no branch — commits to main)* | 15 min |
+| T-02 | Design token system | T-01 | `task/T-02-design-tokens` | 10 min |
+| T-03 | Global CSS baseline & shared components | T-02 | `task/T-03-global-css-baseline` | 20 min |
+| T-04 | AppNav + AppLogo with mobile toggle | T-03 | `task/T-04-appnav-applogo` | 25 min |
+| T-05 | Hero section | T-03 | `task/T-05-hero-section` | 30 min |
+| T-06 | AI Features section | T-03 | `task/T-06-features-section` | 25 min |
+| T-07 | Community-Driven section | T-03 | `task/T-07-community-section` | 25 min |
+| T-08 | ROI Dashboard section | T-03 | `task/T-08-roi-dashboard` | 25 min |
+| T-09 | Comparison Table section | T-03 | `task/T-09-comparison-table` | 20 min |
+| T-10 | Pricing section | T-03 | `task/T-10-pricing-section` | 15 min |
+| T-11 | Use Cases section | T-03, T-06 | `task/T-11-use-cases-section` | 25 min |
+| T-12 | CTA Banner + Footer | T-03, T-04 | `task/T-12-cta-footer` | 20 min |
+| T-13 | Responsiveness pass | T-04–T-12 | `task/T-13-responsiveness` | 30 min |
+| T-14 | Accessibility pass | T-04–T-12 | `task/T-14-accessibility` | 20 min |
+| T-15 | Firebase deploy config | T-01 | `task/T-15-firebase-config` | 10 min |
+| T-16 | README + pixelay/notes.md | T-15 | `task/T-16-readme-docs` | 15 min |
 
 ---
 
@@ -65,6 +78,10 @@ subsequent tasks can satisfy CLAUDE.md's mandatory persona adoption step.
 The orchestrator has explicitly authorised proceeding without a persona for this task only.
 Base model behaviour applies. Do not block on a missing persona file — that is precisely
 what this task resolves. This exception applies to T-00 only and does not carry forward.
+
+**Git workflow:** T-00 is exempt from the branching and PR workflow. Persona files are
+infrastructure set up by the orchestrator before any agent sessions begin. No git
+operations are performed in this task.
 
 **Prompt to agent:**
 ```
@@ -205,8 +222,8 @@ Resequence, split, or create tasks when the current plan needs to change.
 - [ ] Each file begins with a `**Opening rule:**` line that can be quoted verbatim
 - [ ] `pnpm dev` is not affected (no code changes in this task)
 
-**Commit:** Not required. These are infrastructure files committed as part of project setup
-by the orchestrator. If committing, use: `T-00: scaffold persona stubs`
+**Commit/PR:** Not applicable. T-00 is exempt from the branching workflow.
+Orchestrator adds these files to the repo manually before agent sessions begin.
 
 ---
 
@@ -216,6 +233,9 @@ by the orchestrator. If committing, use: `T-00: scaffold persona stubs`
 
 **Goal:** Bootstrap a clean Nuxt 3 project with TailwindCSS, Google Fonts, and the
 correct folder structure for this assessment.
+
+**Branch:** None — T-01 commits directly to `main` as the project's initial commit.
+The branching workflow defined in CLAUDE.md Section 3.9 begins at T-02.
 
 **Prompt to agent:**
 ```
@@ -260,6 +280,29 @@ Scaffold a Nuxt 3 project called "technidox" with the following setup:
    .output
    dist
    .firebase
+
+After completing the scaffold, initialise git and make the initial commit to main:
+
+9. Initialise git (only if .git does not already exist):
+   git init
+
+10. Stage everything and commit directly to main:
+    git add .
+    git commit -m "T-01: project scaffold & config
+
+- Nuxt 3 + TailwindCSS + Google Fonts baseline
+- Directory structure: components/sections/, components/icons/, pixelay/
+- .gitignore configured"
+    git branch -M main
+
+11. Push main to origin (the orchestrator must have already configured the remote):
+    git push -u origin main
+
+    If the push fails because the remote is not set up, output:
+      BLOCKED: Remote origin not configured.
+      Orchestrator must run: git remote add origin [repo-url]
+      Then re-run: git push -u origin main
+    Do not continue until main is successfully pushed to origin.
 ```
 
 **Acceptance Criteria:**
@@ -272,6 +315,8 @@ Scaffold a Nuxt 3 project called "technidox" with the following setup:
 - [ ] `.gitignore` includes `node_modules`, `.nuxt`, `.output`, `dist`, `.firebase`
 - [ ] No `tsconfig.json` was created
 - [ ] `package.json` devDependencies contains only the 5 listed packages
+- [ ] `git log --oneline` shows exactly one commit: `T-01: project scaffold & config`
+- [ ] `git push -u origin main` succeeded — `main` exists on the remote
 
 ---
 
@@ -281,6 +326,8 @@ Scaffold a Nuxt 3 project called "technidox" with the following setup:
 
 **Goal:** Extend Tailwind with the complete brand color palette so all subsequent
 components reference tokens, never hardcoded hex values in class attributes.
+
+**Branch:** `task/T-02-design-tokens`
 
 **Prompt to agent:**
 ```
@@ -317,6 +364,8 @@ Rules:
 - [ ] `class="bg-brand-lavender"` applied to a test div in `index.vue` renders the
   correct lavender background in the browser — then revert the test change
 - [ ] No existing `tailwind.config.js` content was removed
+- [ ] Branch `task/T-02-design-tokens` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -327,6 +376,8 @@ Rules:
 **Goal:** Establish all global CSS utilities, the repeating hero background pattern,
 all custom classes referenced in CLAUDE.md Section 2.4, and the shared CheckCircleIcon
 component used across multiple sections.
+
+**Branch:** `task/T-03-global-css-baseline`
 
 **Prompt to agent:**
 ```
@@ -454,6 +505,8 @@ Do not create any of the listed components yet.
 - [ ] `CheckCircleIcon.vue` uses `currentColor` for all stroke values
 - [ ] `pages/index.vue` has the correct component order as TODO comments
 - [ ] `pnpm dev` starts without errors
+- [ ] Branch `task/T-03-global-css-baseline` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -464,6 +517,8 @@ Do not create any of the listed components yet.
 **Goal:** Build the shared logo component, the navigation bar, and the mobile
 hamburger/close toggle. The mobile menu toggle is the primary interactive element
 required by the assessment rubric.
+
+**Branch:** `task/T-04-appnav-applogo`
 
 **Design reference — desktop (≥ 768px):**
 - Left: logo (document SVG + "TechniDox" text)
@@ -579,6 +634,8 @@ Semantic requirements:
 - [ ] Tab key reaches the "Get Started" button and shows a visible focus ring
 - [ ] All nav links show a focus ring on keyboard focus
 - [ ] `assets/css/main.css` was not modified in this task
+- [ ] Branch `task/T-04-appnav-applogo` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -588,6 +645,8 @@ Semantic requirements:
 
 **Goal:** Recreate the full-viewport hero with lavender grid background, mixed-colour
 headline, two CTAs, three feature pills, and floating document card decorations.
+
+**Branch:** `task/T-05-hero-section`
 
 **Design reference:**
 - Full-section height (min-h-screen), relative, overflow-hidden
@@ -662,6 +721,8 @@ Create components/sections/HeroSection.vue:
 - [ ] Both CTA buttons show a visible focus ring when focused via keyboard
 - [ ] All 3 feature pills render with `<CheckCircleIcon>` (not inline SVG)
 - [ ] No inline SVG check icons in the pill row — all use the shared component
+- [ ] Branch `task/T-05-hero-section` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -671,6 +732,8 @@ Create components/sections/HeroSection.vue:
 
 **Goal:** Recreate the "AI-Native Documentation Engine" section with a "Trusted by"
 line, section header, and 3 tinted feature cards. Create 3 icon components.
+
+**Branch:** `task/T-06-features-section`
 
 **Design reference:**
 - White section background
@@ -797,6 +860,8 @@ import PersonIcon from '~/components/icons/PersonIcon.vue'
 - [ ] Feature list check icons are amber on cards 1+2, emerald on card 3
 - [ ] Feature lists are bottom-aligned (mt-auto working)
 - [ ] No `<style>` block in FeaturesSection.vue
+- [ ] Branch `task/T-06-features-section` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -806,6 +871,8 @@ import PersonIcon from '~/components/icons/PersonIcon.vue'
 
 **Goal:** Recreate the two-column layout with a left feature list and a right
 workflow steps card. Create 4 section-specific icon components.
+
+**Branch:** `task/T-07-community-section`
 
 **Design reference:**
 - Left: 4 feature rows, each with a small coloured icon box + title + description
@@ -916,6 +983,8 @@ Steps can be hardcoded (no v-for). Do not use v-for for the workflow steps.
 - [ ] Step 4 circle is filled emerald (not numbered)
 - [ ] Step 4 right element is a star (not a check)
 - [ ] No `<style>` block in CommunitySection.vue
+- [ ] Branch `task/T-07-community-section` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -925,6 +994,8 @@ Steps can be hardcoded (no v-for). Do not use v-for for the workflow steps.
 
 **Goal:** Recreate the dark navy dashboard mockup with metric cards, a gradient progress
 bar, and an avatar stack.
+
+**Branch:** `task/T-08-roi-dashboard`
 
 **Design reference:**
 - White section bg, centered section header
@@ -1020,6 +1091,8 @@ Create components/sections/ROIDashboard.vue:
 - [ ] Avatar stack has `aria-hidden="true"`
 - [ ] Avatar stack shows 5 coloured circles + "+8" pill, overlapping
 - [ ] No `<style>` block in ROIDashboard.vue
+- [ ] Branch `task/T-08-roi-dashboard` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1029,6 +1102,8 @@ Create components/sections/ROIDashboard.vue:
 
 **Goal:** Recreate the capability comparison table with an indigo header row, 10 data
 rows, and rounded table corners — using Tailwind tokens and CSS utility classes only.
+
+**Branch:** `task/T-09-comparison-table`
 
 **Design reference:**
 - White section bg, centered header
@@ -1096,6 +1171,8 @@ Do not include a technidox field in the data; it is always true.
 - [ ] Table outer container has visible border-radius on all 4 corners
 - [ ] No `<style>` block in ComparisonSection.vue
 - [ ] No inline `style=""` attribute appears anywhere in this file
+- [ ] Branch `task/T-09-comparison-table` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1104,6 +1181,8 @@ Do not include a technidox field in the data; it is always true.
 ## T-10 — Pricing Section
 
 **Goal:** Recreate the pricing teaser with a scalloped badge and CTA button.
+
+**Branch:** `task/T-10-pricing-section`
 
 **Design reference:**
 - White section bg
@@ -1157,6 +1236,8 @@ Create components/sections/PricingSection.vue:
 - [ ] "View Subscription Details" button shows a visible focus ring on keyboard focus
 - [ ] No `<style>` block in PricingSection.vue
 - [ ] No inline `style=""` in this file
+- [ ] Branch `task/T-10-pricing-section` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1166,6 +1247,8 @@ Create components/sections/PricingSection.vue:
 
 **Goal:** Recreate the 2×2 use-case card grid, including the dark navy Enterprise card.
 Create 3 new icon components; reuse TargetIcon from T-06.
+
+**Branch:** `task/T-11-use-cases-section`
 
 **Design reference:**
 - White section bg, centred header
@@ -1305,6 +1388,8 @@ import LockIcon from '~/components/icons/LockIcon.vue'
 - [ ] Feature check icons on Card 4 are lighter than on Cards 1–3
 - [ ] 2×2 grid on desktop, single column on mobile
 - [ ] No `<style>` block in UseCasesSection.vue
+- [ ] Branch `task/T-11-use-cases-section` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1314,6 +1399,8 @@ import LockIcon from '~/components/icons/LockIcon.vue'
 
 **Goal:** Build the CTA banner and footer. Import AppLogo from T-04. Create 3 social
 icon components. Decorative circle uses Tailwind utilities (no inline transform).
+
+**Branch:** `task/T-12-cta-footer`
 
 **Prompt to agent:**
 ```
@@ -1414,6 +1501,8 @@ import InstagramIcon from '~/components/icons/InstagramIcon.vue'
 - [ ] Footer is 4-col on lg+, 2-col on sm, 1-col on mobile
 - [ ] No `<style>` block in CTASection.vue or AppFooter.vue
 - [ ] No inline `style=""` on the decorative circle element
+- [ ] Branch `task/T-12-cta-footer` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1423,6 +1512,8 @@ import InstagramIcon from '~/components/icons/InstagramIcon.vue'
 
 **Goal:** Audit and fix all sections across 3 breakpoints: 375px (mobile), 768px (tablet),
 1440px (desktop).
+
+**Branch:** `task/T-13-responsiveness`
 
 **Prompt to agent:**
 ```
@@ -1474,6 +1565,8 @@ changed and what was fixed. If a section required no changes, note it explicitly
 - [ ] Social icon buttons have a minimum effective tap area of 44×44px
 - [ ] CTA decorative circle is clipped correctly at 375px, 768px, and 1440px
 - [ ] No layout element is cut off at 768px
+- [ ] Branch `task/T-13-responsiveness` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1483,6 +1576,8 @@ changed and what was fixed. If a section required no changes, note it explicitly
 
 **Goal:** Ensure baseline WCAG 2.1 AA compliance for semantic structure, keyboard
 navigation, and screen reader support across all components.
+
+**Branch:** `task/T-14-accessibility`
 
 **Prompt to agent:**
 ```
@@ -1542,6 +1637,8 @@ verified ✅, what was fixed ❌→✅, and every file changed.
 - [ ] Focus rings include `ring-offset-2` (not just `ring-2`)
 - [ ] All floating cards, avatar stacks, and decorative elements have `aria-hidden="true"`
 - [ ] Tab navigation follows logical visual order
+- [ ] Branch `task/T-14-accessibility` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1550,6 +1647,8 @@ verified ✅, what was fixed ❌→✅, and every file changed.
 ## T-15 — Firebase Deploy Config
 
 **Goal:** Configure Nuxt 3 for static generation and set up Firebase Hosting.
+
+**Branch:** `task/T-15-firebase-config`
 
 **Prompt to agent:**
 ```
@@ -1605,6 +1704,8 @@ Do not install firebase-tools — it is installed globally by the orchestrator.
 - [ ] `.output/public/index.html` exists and is not empty
 - [ ] `.output/public/_nuxt/` directory contains hashed JS and CSS files
 - [ ] `npx serve .output/public` renders the page without errors in the browser
+- [ ] Branch `task/T-15-firebase-config` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1613,6 +1714,8 @@ Do not install firebase-tools — it is installed globally by the orchestrator.
 ## T-16 — README + Pixelay Notes
 
 **Goal:** Write the final project documentation required by the assessment rubric.
+
+**Branch:** `task/T-16-readme-docs`
 
 **Prompt to agent:**
 ```
@@ -1670,6 +1773,8 @@ Example structure only (write original content based on the actual implementatio
 - [ ] Each bullet names a specific section, describes a difference, states a cause,
   and states a fix
 - [ ] Neither file contains lorem ipsum or placeholder copy beyond the Live URL
+- [ ] Branch `task/T-16-readme-docs` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
@@ -1709,10 +1814,12 @@ Before submitting the repository, verify each item:
 - [ ] All icon SVGs use `currentColor`
 
 **Repository:**
-- [ ] `CLAUDE.md` is present at project root
+- [ ] `CLAUDE.md` (v1.2.0) is present at project root
 - [ ] `AGENT_TASKS.md` is present at project root
+- [ ] `git log --oneline main` shows one commit per task, formatted `T-XX: [task title]`
+- [ ] All task branches (`task/T-02-*` through `task/T-16-*`) have closed (merged) PRs on GitHub
+- [ ] No open task branches remain — all work is merged to `main`
 - [ ] `pixelay/` folder contains `notes.md` + two screenshots (added by orchestrator)
 - [ ] `README.md` live URL is updated with the real Firebase Hosting URL
 - [ ] `.firebaserc` project ID is updated (not the placeholder)
-- [ ] Commit history has one commit per task, formatted `T-XX: [task title]`
-- [ ] Repository is pushed and the link is ready to share
+- [ ] Repository link is ready to share

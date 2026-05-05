@@ -1,7 +1,7 @@
 # CLAUDE.md — TechniDox Agent Instructions
 
-**Version:** 1.1.0  
-**Last updated:** 2025-05-05  
+**Version:** 1.2.0
+**Last updated:** 2025-05-05
 **Authority:** This file is the supreme source of truth for all agent behavior in this project.
 When any instruction in a task prompt (`AGENT_TASKS.md`) conflicts with a rule in this file,
 this file wins. If you believe a task prompt requires violating a rule here, stop and report
@@ -168,9 +168,8 @@ intend to use. When in doubt, read it.
 ### 3.2 One task at a time
 
 Work from `AGENT_TASKS.md` in dependency order. A task is **not started** until all its
-listed dependencies are ✅ complete. A task is **not complete** until every acceptance
-criterion in Section 4.3 has been verified. These are the only two valid states: not
-started, or complete. There is no "mostly done."
+listed dependencies are ✅ merged to `main`. A task is **not complete** until every
+acceptance criterion is verified and the PR is created. There is no "mostly done."
 
 ### 3.3 Vue 3 Composition API only
 
@@ -252,7 +251,8 @@ than icons inside interactive elements or accessibility labels.
 
 ### 3.8 Commit discipline
 
-One commit per completed task (i.e. after all acceptance criteria are verified). Format:
+One commit per completed task (i.e. after all acceptance criteria are verified and before
+the branch is pushed). Format:
 
 ```
 T-XX: [task title from AGENT_TASKS.md]
@@ -262,31 +262,117 @@ T-XX: [task title from AGENT_TASKS.md]
 - [any acceptance criteria that required extra work]
 ```
 
-Commits happen **after** the report, not before. See Section 4 for the full protocol.
+Commits happen **after** the report and **before** the push. See Section 4 for the full
+protocol.
+
+### 3.9 Branching and PR workflow
+
+Every task from T-02 onwards runs on its own branch. This section defines the complete
+protocol. It is enforced by Steps 4.1, 4.7, 4.8, and 4.9 in the Task Execution Protocol.
+
+**Branch naming convention:**
+```
+task/T-XX-kebab-title
+```
+Examples: `task/T-02-design-tokens`, `task/T-04-appnav-applogo`, `task/T-13-responsiveness`
+
+**The workflow in full:**
+
+```
+BEFORE STARTING WORK:
+  1. Verify the previous task's PR has been merged to main.
+     If it has not, output:
+       BLOCKED: PR for [previous task] has not been merged.
+       Cannot create branch. Waiting for orchestrator.
+     Do not proceed until the orchestrator confirms the merge.
+
+  2. Sync main and cut the new branch:
+       git checkout main
+       git pull origin main
+       git checkout -b task/T-XX-kebab-title
+     Always cut from main. Never cut from another task branch.
+
+AFTER WORK IS COMPLETE (all criteria ✅, report written, commit made):
+  3. Push the branch:
+       git push -u origin task/T-XX-kebab-title
+
+  4. Create the PR via gh CLI:
+       gh pr create \
+         --title "T-XX: [task title]" \
+         --body "$(cat <<'EOF'
+## Summary
+[one-sentence summary of what was built]
+
+## Acceptance Criteria
+[paste ✅ list from Section 4.5 report]
+
+## Deviations
+[paste from Section 4.5 report, or 'None']
+
+## SVG Approximations
+[paste from Section 4.5 report, or 'None']
+
+## Test Instructions
+pnpm dev → verify at http://localhost:3000
+EOF
+)" \
+         --base main
+
+  5. Output the PR URL and halt:
+       PR CREATED: [url]
+       WAITING: Orchestrator must merge this PR before the next task can begin.
+     Do not begin the next task. Do not create additional commits on this branch.
+```
+
+**Prerequisites — orchestrator responsibility (not the agent's):**
+- GitHub repository created with `main` as the default branch
+- Remote configured: `git remote add origin [repo-url]`
+- `gh` CLI authenticated: `gh auth login`
+- T-01's initial commit pushed to `main` before branching begins
+
+**Exceptions — tasks exempt from this workflow:**
+- **T-00:** No code or git operations. Persona files are created by the orchestrator.
+- **T-01:** Commits directly to `main` as the project's initial commit. No branch, no PR.
+  After T-01: `git init` (if not done), `git add .`,
+  `git commit -m "T-01: project scaffold & config"`,
+  `git branch -M main`, `git push -u origin main`.
+  The branching workflow begins at T-02.
 
 ---
 
 ## 4. TASK EXECUTION PROTOCOL
 
-This protocol is mandatory for every task. Execute every step. Do not skip steps.
+This protocol is mandatory for every task from T-02 onwards. T-00 and T-01 are exempt
+from Steps 4.1 and 4.7–4.9 (see Section 3.9 exceptions). Execute every step in order.
+Do not skip steps.
 
-### 4.1 Pre-flight (before writing any code)
+### 4.1 Branch creation (before any other work)
+
+```
+[ ] Confirm the previous task's PR is merged to main
+    If not merged → output BLOCKED message (Section 3.9) and halt
+[ ] git checkout main && git pull origin main
+[ ] git checkout -b task/T-XX-kebab-title
+    Use the exact branch name from the task's "Branch" field in AGENT_TASKS.md
+```
+
+### 4.2 Pre-flight (before writing any code)
 
 ```
 [ ] Read the full task block in AGENT_TASKS.md — goal, design reference, prompt, criteria
-[ ] Confirm all dependency tasks are ✅ complete
+[ ] Confirm all dependency tasks are ✅ merged to main
 [ ] Read assets/css/main.css in full
 [ ] Read tailwind.config.js in full
 [ ] Read the target component file if it already exists
 [ ] Read any component the new file will import or be imported by
 ```
 
-### 4.2 Implementation
+### 4.3 Implementation
 
 Follow the task prompt exactly. If the prompt requires something that violates a rule in
 this file, stop and report the conflict before writing any code.
 
-### 4.3 Self-verification (mandatory before commit)
+### 4.4 Self-verification (mandatory before commit)
 
 Go through every acceptance criterion in the task. For each one:
 
@@ -299,12 +385,13 @@ escalated to the orchestrator with a reason it cannot be fixed within this task'
 Failing criteria are **not acceptable to commit**. A task with one failing criterion
 is not complete — it is blocked.
 
-### 4.4 Report (before commit)
+### 4.5 Report (before commit)
 
 Output a structured report:
 
 ```
 TASK: T-XX [title]
+BRANCH: task/T-XX-kebab-title
 STATUS: Complete | Blocked
 
 ACCEPTANCE CRITERIA:
@@ -328,7 +415,7 @@ FILES CHANGED:
   - [filepath] — [one-line description of change]
 ```
 
-### 4.5 Commit
+### 4.6 Commit
 
 Only after the report is complete and all criteria are ✅:
 
@@ -339,6 +426,44 @@ git commit -m "T-XX: [task title]
 - [summary line]
 - [deviations if any]"
 ```
+
+### 4.7 Push branch
+
+```bash
+git push -u origin task/T-XX-kebab-title
+```
+
+If the push is rejected for any reason other than "branch already exists on remote",
+output a BLOCKED message and do not force-push. Report the error to the orchestrator.
+
+### 4.8 Create PR
+
+```bash
+gh pr create \
+  --title "T-XX: [task title]" \
+  --body "..." \
+  --base main
+```
+
+Use the PR body template from Section 3.9. Paste the Section 4.5 report content into
+the appropriate fields. Do not summarise — paste verbatim.
+
+If `gh pr create` fails because `gh` is not authenticated, output:
+```
+BLOCKED: gh CLI not authenticated.
+Run: gh auth login
+Cannot create PR. Waiting for orchestrator.
+```
+
+### 4.9 Halt and report PR URL
+
+```
+PR CREATED: [url from gh pr create output]
+WAITING: Orchestrator must merge this PR to main before the next task can begin.
+```
+
+Do not start the next task. Do not make additional commits on this branch.
+Do not create a new branch. Wait for the orchestrator to confirm the merge.
 
 ---
 
@@ -362,7 +487,7 @@ layout unless it produces obvious overflow.
 
 ## 6. ACCESSIBILITY REQUIREMENTS
 
-These requirements apply at every task, not only T-14. Verify them during Section 4.3
+These requirements apply at every task, not only T-14. Verify them during Section 4.4
 self-verification for every component you build or modify.
 
 ### 6.1 Structural requirements
@@ -495,6 +620,13 @@ Before any commit:   All criteria ✅ → Report written → Then commit
 On conflict:         CLAUDE.md > persona file > task prompt > base training
 On blocked task:     Report blocker → Do not proceed → Wait for orchestrator
 On missing file:     Do not invent contents → Report BLOCKED
+
+BRANCHING (T-02 onwards):
+  Start of task:     Confirm previous PR merged → git pull main → git checkout -b task/T-XX-*
+  End of task:       Commit → git push → gh pr create --base main → output PR URL → HALT
+  If PR not merged:  Output BLOCKED → Do not cut new branch → Wait for orchestrator
+  T-00, T-01:        Exempt from branching. T-01 commits directly to main.
+
 On new dependency:   Do not add → Report need → Wait for approval
 On heading:          h1 (hero only) → h2 (section) → h3 (card) → no skipping
 On color values:     Token in class → approved list for style="" → report anything else

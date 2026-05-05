@@ -7,7 +7,7 @@
       <CommunitySection />
       <ROIDashboard />
       <ComparisonSection />
-      <!-- TODO: PricingSection -->
+      <PricingSection />
       <!-- TODO: UseCasesSection -->
       <!-- TODO: CTASection -->
     </main>

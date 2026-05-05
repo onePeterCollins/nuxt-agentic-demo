@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <AppNav />
     <main>
-      <!-- TODO: HeroSection -->
+      <HeroSection />
       <!-- TODO: FeaturesSection -->
       <!-- TODO: CommunitySection -->
       <!-- TODO: ROIDashboard -->

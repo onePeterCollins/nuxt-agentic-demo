@@ -8,7 +8,7 @@
       <ROIDashboard />
       <ComparisonSection />
       <PricingSection />
-      <!-- TODO: UseCasesSection -->
+      <UseCasesSection />
       <!-- TODO: CTASection -->
     </main>
     <AppFooter />

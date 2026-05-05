@@ -4,7 +4,7 @@
     <main>
       <HeroSection />
       <FeaturesSection />
-      <!-- TODO: CommunitySection -->
+      <CommunitySection />
       <!-- TODO: ROIDashboard -->
       <!-- TODO: ComparisonSection -->
       <!-- TODO: PricingSection -->

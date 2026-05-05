@@ -3,7 +3,7 @@
     <AppNav />
     <main>
       <HeroSection />
-      <!-- TODO: FeaturesSection -->
+      <FeaturesSection />
       <!-- TODO: CommunitySection -->
       <!-- TODO: ROIDashboard -->
       <!-- TODO: ComparisonSection -->

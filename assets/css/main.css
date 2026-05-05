@@ -1,3 +1,64 @@
 body {
   font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-grid-bg {
+  background-color: #EAEAF5;
+  background-image:
+    linear-gradient(rgba(88, 80, 200, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 80, 200, 0.07) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.footer-bg {
+  background-color: #EAEAF5;
+}
+
+.price-tag-shape {
+  clip-path: polygon(
+    50% 0%, 60% 5%, 70% 2%, 77% 8%, 87% 7%, 92% 15%,
+    100% 18%, 100% 30%, 97% 40%, 100% 50%, 97% 60%,
+    100% 70%, 95% 80%, 100% 90%, 92% 95%, 85% 100%,
+    75% 97%, 65% 100%, 55% 96%, 50% 100%, 45% 96%,
+    35% 100%, 25% 97%, 15% 100%, 8% 95%, 0% 90%,
+    5% 80%, 0% 70%, 3% 60%, 0% 50%, 3% 40%,
+    0% 30%, 0% 18%, 8% 15%, 13% 7%, 23% 8%, 30% 2%, 40% 5%
+  );
+}
+
+.roi-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.progress-bar-gradient {
+  background: linear-gradient(90deg, #22C55E 0%, #3B82F6 100%);
+}
+
+.table-corner-bl {
+  border-bottom-left-radius: 1rem;
+}
+
+.table-corner-br {
+  border-bottom-right-radius: 1rem;
+}
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}

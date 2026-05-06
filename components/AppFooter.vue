@@ -61,7 +61,7 @@ const linkGroups = [
           v-for="group in linkGroups"
           :key="group.heading"
         >
-          <h4 class="text-gray-800 font-bold text-sm mb-4">{{ group.heading }}</h4>
+          <h3 class="text-gray-800 font-bold text-sm mb-4">{{ group.heading }}</h3>
           <ul class="space-y-2.5">
             <li v-for="link in group.links" :key="link">
               <a

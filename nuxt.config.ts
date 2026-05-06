@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       appId: process.env.FIREBASE_APP_ID,
       measurementId: process.env.FIREBASE_MEASUREMENT_ID
     },
-    auth: true  // enables Firebase Auth module
+    auth: false  // disable server-side Firebase Auth for static site
   },
 
   app: {

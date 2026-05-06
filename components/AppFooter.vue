@@ -35,21 +35,21 @@ const linkGroups = [
             <a
               href="#"
               aria-label="LinkedIn"
-              class="w-9 h-9 rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
+              class="w-9 h-9 min-w-[44px] min-h-[44px] rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
             >
               <LinkedInIcon />
             </a>
             <a
               href="#"
               aria-label="Facebook"
-              class="w-9 h-9 rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
+              class="w-9 h-9 min-w-[44px] min-h-[44px] rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
             >
               <FacebookIcon />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              class="w-9 h-9 rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
+              class="w-9 h-9 min-w-[44px] min-h-[44px] rounded-lg bg-brand-indigo text-white flex items-center justify-center hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
             >
               <InstagramIcon />
             </a>

@@ -67,7 +67,7 @@ import CheckCircleIcon from '~/components/icons/CheckCircleIcon.vue'
       <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
         <!-- Primary CTA -->
         <a href="#"
-           class="bg-brand-indigo text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-brand-indigo-light transition-colors inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
+           class="w-full sm:w-auto bg-brand-indigo text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-brand-indigo-light transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
           Book a Demo
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <path d="M3 8h10M9 4l4 4-4 4"/>
@@ -76,7 +76,7 @@ import CheckCircleIcon from '~/components/icons/CheckCircleIcon.vue'
 
         <!-- Secondary CTA -->
         <a href="#"
-           class="border border-gray-400 text-gray-600 font-semibold px-8 py-3.5 rounded-xl hover:border-brand-indigo hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
+           class="w-full sm:w-auto text-center border border-gray-400 text-gray-600 font-semibold px-8 py-3.5 rounded-xl hover:border-brand-indigo hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
           Join Enterprise Waitlist
         </a>
       </div>

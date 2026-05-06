@@ -10,12 +10,14 @@ html {
   scroll-behavior: smooth;
 }
 
-.hero-grid-bg {
-  background-color: #EAEAF5;
-  background-image:
-    linear-gradient(rgba(88, 80, 200, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(88, 80, 200, 0.07) 1px, transparent 1px);
-  background-size: 80px 80px;
+.hero-grid-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('~/assets/images/technidox-hero-grid.svg');
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
 }
 
 .footer-bg {

@@ -3,10 +3,7 @@ import CheckCircleIcon from '~/components/icons/CheckCircleIcon.vue'
 </script>
 
 <template>
-  <section class="relative overflow-hidden min-h-screen flex flex-col" aria-label="Hero">
-    <!-- Background grid -->
-    <div class="absolute inset-0 hero-grid-bg" aria-hidden="true"></div>
-
+  <section class="relative overflow-hidden min-h-screen flex flex-col bg-brand-lavender hero-grid-bg" aria-label="Hero">
     <!-- Left floating card -->
     <div class="absolute left-0 top-1/4 -translate-x-8 hidden lg:block pointer-events-none select-none"
          aria-hidden="true">

@@ -9,7 +9,7 @@
       <ComparisonSection />
       <PricingSection />
       <UseCasesSection />
-      <!-- TODO: CTASection -->
+      <CTASection />
     </main>
     <AppFooter />
   </div>

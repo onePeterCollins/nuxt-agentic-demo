@@ -5,10 +5,11 @@ const props = defineProps({
   animation: { type: String,  default: 'fade-up' },
   duration:  { type: Number,  default: 600 },
   delay:     { type: Number,  default: 0 },
-  easing:    { type: String,  default: 'ease-out' },
+  easing:    { type: String,  default: 'cubic-bezier(0.16, 1, 0.3, 1)' },
   threshold: { type: Number,  default: 0.15 },
   eager:     { type: Boolean, default: false },
-  once:      { type: Boolean, default: true }
+  once:      { type: Boolean, default: true },
+  distance:  { type: [Number, String], default: null }
 })
 
 const PRESETS = {
@@ -17,10 +18,10 @@ const PRESETS = {
   'fade-down':   { opacity: 0, transform: 'translateY(-32px)' },
   'fade-left':   { opacity: 0, transform: 'translateX(32px)' },
   'fade-right':  { opacity: 0, transform: 'translateX(-32px)' },
-  'slide-up':    { opacity: 0, transform: 'translateY(64px)' },
-  'slide-down':  { opacity: 0, transform: 'translateY(-64px)' },
-  'slide-left':  { opacity: 0, transform: 'translateX(64px)' },
-  'slide-right': { opacity: 0, transform: 'translateX(-64px)' }
+  'slide-up':    { opacity: 1, transform: 'translateY(64px)' },
+  'slide-down':  { opacity: 1, transform: 'translateY(-64px)' },
+  'slide-left':  { opacity: 1, transform: 'translateX(64px)' },
+  'slide-right': { opacity: 1, transform: 'translateX(-64px)' }
 }
 
 const el      = ref(null)
@@ -37,7 +38,12 @@ const currentStyle = computed(() => {
   if (visible.value) {
     return { opacity: 1, transform: 'none', transition: transition.value }
   }
-  return { ...preset, transition: transition.value }
+  let transform = preset.transform
+  if (props.distance !== null && transform !== 'none') {
+    const d = typeof props.distance === 'number' ? `${props.distance}px` : props.distance
+    transform = transform.replace(/[\d.]+px/, d)
+  }
+  return { opacity: preset.opacity, transform, transition: transition.value }
 })
 
 onMounted(() => {

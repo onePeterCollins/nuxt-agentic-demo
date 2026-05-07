@@ -1,13 +1,26 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import AppLogo from '~/components/AppLogo.vue'
 import Button from '~/components/buttons/Button.vue'
 
 const menuOpen = ref(false)
+const navReady = ref(false)
+
+onMounted(() => {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    navReady.value = true
+  }))
+})
 </script>
 
 <template>
-  <header id="app-nav" class="z-50 md:flex w-full md:w-[1920px] justify-between items-center md:absolute left-0 top-0 px-5 py-6 md:px-[120px] md:py-8">
+  <header
+    id="app-nav"
+    class="z-50 md:flex w-full md:w-[1920px] justify-between items-center md:absolute left-0 top-0 px-5 py-6 md:px-[120px] md:py-8"
+    :style="navReady
+      ? { transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1)' }
+      : { transform: 'translateY(-110%)', transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1)' }"
+  >
     <nav class="flex w-full justify-between items-center">
       <AppLogo />
 
@@ -40,7 +53,7 @@ const menuOpen = ref(false)
       </ul>
 
       <!-- Desktop CTA button -->
-      <Button variant="solid" class="hidden md:flex text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
+      <Button variant="solid" class="hidden md:flex text-sm font-medium">
         Get Started
       </Button>
 
@@ -99,7 +112,7 @@ const menuOpen = ref(false)
             </a>
           </li>
           <li class="px-6 py-3">
-            <Button variant="solid" class="w-full justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo" :onClick="() => menuOpen = false">
+            <Button variant="solid" class="w-full justify-center text-sm font-medium" :onClick="() => menuOpen = false">
               Get Started
             </Button>
           </li>

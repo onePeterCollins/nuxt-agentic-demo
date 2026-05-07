@@ -3,6 +3,9 @@ import CheckCircleIcon from '~/components/icons/CheckCircleIcon.vue'
 import SparkleIcon from '~/components/icons/SparkleIcon.vue'
 import TargetIcon from '~/components/icons/TargetIcon.vue'
 import PersonIcon from '~/components/icons/PersonIcon.vue'
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
 
 const cards = [
   {
@@ -37,7 +40,7 @@ const cards = [
 
 <template>
   <section class="bg-white py-20 px-6" aria-labelledby="features-heading">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
 
       <!-- Trusted-by line -->
       <p class="text-center text-gray-500 font-medium mb-16">
@@ -49,7 +52,7 @@ const cards = [
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           AI ENGINE
         </p>
-        <h2 id="features-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <h2 id="features-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           AI-Native Documentation Engine
         </h2>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
@@ -62,7 +65,7 @@ const cards = [
         <div
           v-for="card in cards"
           :key="card.title"
-          :class="[card.bg, 'rounded-2xl p-6 flex flex-col']"
+          :class="[card.bg, 'reveal-hidden rounded-2xl p-6 flex flex-col']"
         >
           <!-- Icon box -->
           <div :class="[card.iconBg, 'w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0']">

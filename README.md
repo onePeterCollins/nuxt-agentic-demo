@@ -2,11 +2,10 @@
 
 AI-powered documentation platform that automatically generates, scores, and improves your documentation — reducing time from hours to minutes.
 
-## Live URL
+## Firebase URL
 
-**https://REPLACE_WITH_FIREBASE_URL**
+**https://technidox-nuxt-demo-39881.web.app/**
 
-> Replace this URL after running `firebase deploy` and copying the Hosting URL from the CLI output.
 
 ---
 
@@ -54,7 +53,7 @@ pnpm deploy
 # Runs: nuxt generate && firebase deploy
 ```
 
-After deploy, copy the **Hosting URL** from the CLI output into the Live URL placeholder above.
+After deploy, copy the **Hosting URL** from the CLI output into the Firebase URL placeholder above.
 
 ---
 
@@ -116,5 +115,4 @@ Accessibility attributes in use:
 
 - **Firebase Auth flow** — The `nuxt-vuefire` module is already wired up; a sign-in page and protected dashboard route would complete the auth loop.
 - **Nuxt Content integration** — Move section copy to Markdown/YAML content files so the site is editable without touching Vue components.
-- **Scroll-reveal animations** — Add `IntersectionObserver`-driven entrance transitions to section headings and cards for a more polished feel.
 - **Pixelay visual regression** — Capture Figma overlays at 375px, 768px, and 1440px and diff against screenshots to quantify remaining pixel-level gaps.

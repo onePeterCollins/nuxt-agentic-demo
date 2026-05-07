@@ -1,17 +1,21 @@
 <script setup>
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
+
 const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
 </script>
 
 <template>
   <section class="bg-white py-20 px-6" aria-labelledby="roi-heading">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
 
       <!-- Section header -->
       <div class="text-center mb-12">
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           ROI &amp; ANALYTICS
         </p>
-        <h2 id="roi-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <h2 id="roi-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Measurable Impact From Day One
         </h2>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">

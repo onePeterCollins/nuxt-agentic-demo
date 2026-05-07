@@ -1,6 +1,12 @@
+<script setup>
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
+</script>
+
 <template>
   <section class="footer-bg py-16 px-6" aria-label="Call to action">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
       <div class="relative rounded-2xl overflow-hidden px-8 py-14 text-center" style="background: #3730A3">
 
         <!-- Decorative circle -->
@@ -9,7 +15,7 @@
           aria-hidden="true"
         ></div>
 
-        <h2 class="relative text-white text-3xl sm:text-4xl font-bold leading-tight mb-4">
+        <h2 class="reveal-hidden relative text-white text-3xl sm:text-4xl font-bold leading-tight mb-4">
           Scale Your Documentation<br class="hidden sm:block"> With Confidence.
         </h2>
 

@@ -1,8 +1,14 @@
+<script setup>
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
+</script>
+
 <template>
   <section class="bg-white py-20 px-6" aria-label="Pricing">
-    <div class="max-w-2xl mx-auto text-center">
+    <div class="max-w-[1920px] mx-auto text-center">
 
-      <h2 class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-12">
+      <h2 class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-12">
         Plans Built For Every Stage Of Growth
       </h2>
 

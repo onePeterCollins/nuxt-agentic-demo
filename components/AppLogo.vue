@@ -1,5 +1,5 @@
 <template>
-  <a href="/" class="flex items-center shrink-0">
+  <a href="/" class="flex items-center shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
     <NuxtImg
       src="/images/technidox-logo.png"
       alt="TechniDox"

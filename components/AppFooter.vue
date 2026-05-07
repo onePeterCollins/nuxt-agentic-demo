@@ -57,20 +57,21 @@ const linkGroups = [
         </div>
 
         <!-- Columns 2–4: Link groups -->
-        <div
+        <nav
           v-for="group in linkGroups"
           :key="group.heading"
+          :aria-label="group.heading"
         >
           <h3 class="text-gray-800 font-bold text-sm mb-4">{{ group.heading }}</h3>
           <ul class="space-y-2.5">
             <li v-for="link in group.links" :key="link">
               <a
                 href="#"
-                class="text-gray-500 text-sm hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-indigo rounded-sm"
+                class="text-gray-500 text-sm hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm"
               >{{ link }}</a>
             </li>
           </ul>
-        </div>
+        </nav>
 
       </div>
     </div>

@@ -4,6 +4,7 @@ import SparkleIcon from '~/components/icons/SparkleIcon.vue'
 import TargetIcon from '~/components/icons/TargetIcon.vue'
 import PersonIcon from '~/components/icons/PersonIcon.vue'
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 
@@ -39,8 +40,7 @@ const cards = [
 </script>
 
 <template>
-  <section class="bg-white py-20 px-6" aria-labelledby="features-heading">
-    <div class="max-w-[1920px] mx-auto">
+  <SectionBase class="bg-white py-20 px-6" labelledby="features-heading">
 
       <!-- Trusted-by line -->
       <p class="text-center text-gray-500 font-medium mb-16">
@@ -88,6 +88,5 @@ const cards = [
         </div>
       </div>
 
-    </div>
-  </section>
+  </SectionBase>
 </template>

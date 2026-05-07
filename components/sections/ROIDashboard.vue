@@ -1,5 +1,6 @@
 <script setup>
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 
@@ -7,8 +8,7 @@ const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
 </script>
 
 <template>
-  <section class="bg-white py-20 px-6" aria-labelledby="roi-heading">
-    <div class="max-w-[1920px] mx-auto">
+  <SectionBase class="bg-white py-20 px-6" labelledby="roi-heading">
 
       <!-- Section header -->
       <div class="text-center mb-12">
@@ -167,6 +167,5 @@ const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
 
         </div>
       </div>
-    </div>
-  </section>
+  </SectionBase>
 </template>

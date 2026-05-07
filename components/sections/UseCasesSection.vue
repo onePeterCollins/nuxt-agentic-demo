@@ -5,6 +5,7 @@ import TargetIcon from '~/components/icons/TargetIcon.vue'
 import ArrowRightIcon from '~/components/icons/ArrowRightIcon.vue'
 import LockIcon from '~/components/icons/LockIcon.vue'
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 
@@ -69,8 +70,7 @@ const cards = [
 </script>
 
 <template>
-  <section class="bg-white py-20 px-6" aria-labelledby="usecases-heading">
-    <div class="max-w-[1920px] mx-auto">
+  <SectionBase class="bg-white py-20 px-6" labelledby="usecases-heading">
 
       <!-- Section header -->
       <div class="text-center mb-12">
@@ -140,6 +140,5 @@ const cards = [
         </div>
       </div>
 
-    </div>
-  </section>
+  </SectionBase>
 </template>

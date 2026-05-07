@@ -68,6 +68,9 @@ Failing criteria block the commit. Missing PR blocks task completion.
 | T-16 | README + pixelay/notes.md | T-15 | `task/T-16-readme-docs` | 15 min |
 | T-17a | SectionBase component | T-16 | `task/T-17a-section-base-component` | 15 min |
 | T-17b | SectionBase refactor | T-17a | `task/T-17b-section-base-refactor` | 30 min |
+| T-18a | AnimateIn component | T-17b | `task/T-18a-animate-in-component` | 20 min |
+| T-18b | Hero + AppNav animations | T-18a | `task/T-18b-hero-animations` | 25 min |
+| T-18c | Animate remaining sections | T-18b | `task/T-18c-section-animations` | 30 min |
 
 ---
 
@@ -1976,6 +1979,364 @@ After all 7 components are refactored, run pnpm dev and verify:
 - [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
+
+## T-18a — AnimateIn Component
+
+**Goal:** Create `components/AnimateIn.vue` — a reusable slot-based wrapper that applies
+entrance animations to any content. Animations are driven entirely by inline computed
+styles (no CSS classes, no `<style>` block). An IntersectionObserver triggers animations
+when elements scroll into view; an `eager` mode fires on page load for above-the-fold
+content.
+
+**Branch:** `task/T-18a-animate-in-component`
+
+**Depends On:** T-17b ✅
+
+---
+
+### Design spec
+
+`AnimateIn.vue` accepts the following props:
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `animation` | `String` | `'fade-up'` | Animation preset name |
+| `duration` | `Number` | `600` | Transition duration in ms |
+| `delay` | `Number` | `0` | Transition delay in ms |
+| `easing` | `String` | `'ease-out'` | CSS easing function |
+| `threshold` | `Number` | `0.15` | IntersectionObserver threshold (0–1) |
+| `eager` | `Boolean` | `false` | Animate on mount instead of on scroll |
+| `once` | `Boolean` | `true` | Unobserve after first trigger |
+
+**Animation presets** — initial hidden state → final visible state:
+
+| Preset | Initial transform | Notes |
+|---|---|---|
+| `fade` | `none` | Opacity only |
+| `fade-up` | `translateY(32px)` | Default |
+| `fade-down` | `translateY(-32px)` | Slide from above |
+| `fade-left` | `translateX(32px)` | Slide from right |
+| `fade-right` | `translateX(-32px)` | Slide from left |
+| `slide-up` | `translateY(64px)` | Stronger upward entry |
+| `slide-down` | `translateY(-64px)` | Stronger downward entry |
+| `slide-left` | `translateX(64px)` | Stronger from right |
+| `slide-right` | `translateX(-64px)` | Stronger from left |
+
+All presets start at `opacity: 0` and end at `opacity: 1, transform: none`.
+
+**Rendering:** A single `<div ref="el">` with `:style="currentStyle"`. No extra wrapper.
+No `<style>` block. No CSS classes added to `main.css`.
+
+**Eager mode:** Uses double `requestAnimationFrame` so the browser paints the initial
+hidden frame before the transition begins. This makes the animation visible even for
+elements that are already in the viewport on load.
+
+**IntersectionObserver scope:** Each `AnimateIn` instance creates its own observer,
+scoped to its wrapper `div`. The observer is disconnected in `onUnmounted`.
+
+---
+
+### Prompt to agent
+
+```
+Read assets/css/main.css and tailwind.config.js in full before starting.
+
+Create components/AnimateIn.vue with the following exact implementation:
+
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
+  animation: { type: String,  default: 'fade-up' },
+  duration:  { type: Number,  default: 600 },
+  delay:     { type: Number,  default: 0 },
+  easing:    { type: String,  default: 'ease-out' },
+  threshold: { type: Number,  default: 0.15 },
+  eager:     { type: Boolean, default: false },
+  once:      { type: Boolean, default: true }
+})
+
+const PRESETS = {
+  'fade':        { opacity: 0, transform: 'none' },
+  'fade-up':     { opacity: 0, transform: 'translateY(32px)' },
+  'fade-down':   { opacity: 0, transform: 'translateY(-32px)' },
+  'fade-left':   { opacity: 0, transform: 'translateX(32px)' },
+  'fade-right':  { opacity: 0, transform: 'translateX(-32px)' },
+  'slide-up':    { opacity: 0, transform: 'translateY(64px)' },
+  'slide-down':  { opacity: 0, transform: 'translateY(-64px)' },
+  'slide-left':  { opacity: 0, transform: 'translateX(64px)' },
+  'slide-right': { opacity: 0, transform: 'translateX(-64px)' }
+}
+
+const el       = ref(null)
+const visible  = ref(false)
+let   observer = null
+
+const transition = computed(() =>
+  `opacity ${props.duration}ms ${props.easing} ${props.delay}ms,` +
+  ` transform ${props.duration}ms ${props.easing} ${props.delay}ms`
+)
+
+const currentStyle = computed(() => {
+  const preset = PRESETS[props.animation] ?? PRESETS['fade-up']
+  if (visible.value) {
+    return { opacity: 1, transform: 'none', transition: transition.value }
+  }
+  return { ...preset, transition: transition.value }
+})
+
+onMounted(() => {
+  if (props.eager) {
+    requestAnimationFrame(() => requestAnimationFrame(() => { visible.value = true }))
+    return
+  }
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          visible.value = true
+          if (props.once) observer.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: props.threshold, rootMargin: '0px 0px -40px 0px' }
+  )
+  if (el.value) observer.observe(el.value)
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+})
+</script>
+
+<template>
+  <div ref="el" :style="currentStyle">
+    <slot />
+  </div>
+</template>
+
+Do not add a <style> block. Do not add any CSS to main.css. Do not add any props
+beyond the 7 listed above.
+
+After creating the file, run pnpm dev and confirm no console errors are introduced.
+AnimateIn is not used by any component yet — this task only creates it.
+```
+
+---
+
+**Acceptance Criteria:**
+
+- [ ] `components/AnimateIn.vue` exists with `<script setup>` and exactly 7 props
+- [ ] All 9 animation presets are defined in `PRESETS`
+- [ ] No `<style>` block
+- [ ] No additions to `assets/css/main.css`
+- [ ] `currentStyle` is a computed ref returning the correct inline style object
+- [ ] `eager=true`: `visible` becomes `true` via double `requestAnimationFrame` on mount
+- [ ] `eager=false`: IntersectionObserver created on mount, `visible` set when
+      element enters viewport
+- [ ] `once=true`: observer unobserves after first trigger
+- [ ] Observer disconnected in `onUnmounted`
+- [ ] `pnpm dev` starts with no console errors
+- [ ] No existing component modified
+- [ ] Branch `task/T-18a-animate-in-component` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
+
+---
+
+## T-18b — Hero + AppNav Animations
+
+**Goal:** Apply entrance animations to the AppNav header and all HeroSection content
+using the `AnimateIn` component. The AppNav slides in from above on page load (1 second,
+ease-out). Hero content cascades in with staggered delays.
+
+**Branch:** `task/T-18b-hero-animations`
+
+**Depends On:** T-18a ✅
+
+---
+
+### Design rationale
+
+**AppNav — overflow-hidden as a natural mask:**
+HeroSection's `<section>` has `overflow-hidden`. When AnimateIn wraps AppNav with
+`animation="fade-down"` and `eager`, the nav starts at `translateY(-32px)` — 32px above
+its natural `top: 0` position, which is above the section boundary and therefore clipped
+(invisible). As it transitions to `translateY(0)` it slides down into view from above,
+exactly the "animate in from above" effect requested. No structural changes needed.
+
+**Stagger pattern:** Each hero element has an increasing `delay` so they cascade in
+sequentially rather than all appearing simultaneously.
+
+---
+
+### Animation map
+
+| Element | Wrap with AnimateIn | animation | duration | delay | eager |
+|---|---|---|---|---|---|
+| `<AppNav />` | Yes | `fade-down` | `1000` | `0` | `true` |
+| `<h1>` hero heading | Yes | `fade-down` | `1000` | `150` | `true` |
+| `<p>` subheading | Yes | `fade` | `900` | `350` | `true` |
+| CTA buttons `<div>` | Yes | `fade-up` | `800` | `500` | `true` |
+| Feature pills `<div>` | Yes | `fade-up` | `700` | `650` | `true` |
+| Left top floating card | Yes | `fade-right` | `900` | `400` | `true` |
+| Right floating card | Yes | `fade-left` | `900` | `400` | `true` |
+
+Notes:
+- `fade-down` on AppNav: the `overflow-hidden` on the parent section clips the
+  initial translate, creating a clean slide-in-from-above effect.
+- Floating cards (`aria-hidden="true"`) are decorative — AnimateIn wrapper div
+  must also carry `aria-hidden="true"` when wrapping them, to keep them out of the
+  accessibility tree. Pass `aria-hidden="true"` as an attribute on `<AnimateIn>`;
+  Vue's `inheritAttrs: true` (default) will forward it to AnimateIn's root `<div>`.
+- Do NOT wrap `<AppNav />` inside AnimateIn in a way that changes AppNav's CSS
+  position. The AnimateIn wrapper div must have no conflicting layout styles of
+  its own — the `currentStyle` only sets `opacity` and `transform`.
+- After wrapping, verify the AppNav is still visually at the top of the section
+  (its `position: absolute` styles are preserved — AnimateIn adds no layout styles).
+
+---
+
+### Prompt to agent
+
+```
+Read assets/css/main.css, tailwind.config.js, components/AnimateIn.vue, and
+components/sections/HeroSection.vue in full before starting.
+
+Add `import AnimateIn from '~/components/AnimateIn.vue'` to HeroSection's
+<script setup>.
+
+Then wrap each element listed in the animation map above with <AnimateIn> using
+the specified props. Use :duration and :delay (bound numbers), not duration and
+delay (which would be strings).
+
+For the floating card wrappers: pass aria-hidden="true" on the <AnimateIn> tag
+so it inherits onto the wrapper div. Example:
+  <AnimateIn animation="fade-right" :duration="900" :delay="400" eager aria-hidden="true">
+    <div class="left-top-card ...">...</div>
+  </AnimateIn>
+
+For the AppNav wrapper, the AnimateIn div must not carry any layout-altering styles.
+Since AnimateIn only sets opacity and transform, this is already the case.
+
+After all wraps are in place, run pnpm dev and verify:
+1. On page load, AppNav slides in from above over 1 second (ease-out)
+2. Hero heading fades in from above with a 150ms offset after AppNav starts
+3. Subheading, CTAs, pills cascade in with increasing delays
+4. Floating cards fade in from their respective sides
+5. No layout shift — all sections below HeroSection are unaffected
+6. No console errors
+```
+
+---
+
+**Acceptance Criteria:**
+
+- [ ] `AnimateIn` is imported in `HeroSection.vue`
+- [ ] `<AppNav />` is wrapped in `<AnimateIn animation="fade-down" :duration="1000" eager>`
+- [ ] Hero `<h1>` is wrapped in `<AnimateIn animation="fade-down" :duration="1000" :delay="150" eager>`
+- [ ] Subheading `<p>` is wrapped in `<AnimateIn animation="fade" :duration="900" :delay="350" eager>`
+- [ ] CTA buttons `<div>` is wrapped in `<AnimateIn animation="fade-up" :duration="800" :delay="500" eager>`
+- [ ] Feature pills `<div>` is wrapped in `<AnimateIn animation="fade-up" :duration="700" :delay="650" eager>`
+- [ ] Left floating card is wrapped with `animation="fade-right"` and `aria-hidden="true"`
+- [ ] Right floating card is wrapped with `animation="fade-left"` and `aria-hidden="true"`
+- [ ] All `AnimateIn` wrappers use `:duration` and `:delay` (bound numbers, not strings)
+- [ ] AppNav is still visually at the top of HeroSection after changes
+- [ ] No layout shift on any section below HeroSection
+- [ ] `pnpm dev` starts with no console errors
+- [ ] No `<style>` block added to HeroSection
+- [ ] Branch `task/T-18b-hero-animations` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
+
+---
+
+## T-18c — Animate Remaining Sections
+
+**Goal:** Replace the existing `reveal-hidden` / `useScrollReveal` pattern across all
+6 sections that currently use it with `AnimateIn` component wrappers. After this task,
+`useScrollReveal` is no longer called by any section and can be considered deprecated.
+
+**Branch:** `task/T-18c-section-animations`
+
+**Depends On:** T-18b ✅
+
+---
+
+### Current state (before this task)
+
+| Section | Currently animated elements |
+|---|---|
+| FeaturesSection | `<h2>` heading + 3 feature cards (`reveal-hidden`) |
+| CommunitySection | none (useScrollReveal called but no reveal-hidden elements) |
+| ROIDashboard | `<h2>` heading |
+| ComparisonSection | `<h2>` heading |
+| PricingSection | `<h2>` heading |
+| CTASection | `<h2>` heading |
+| UseCasesSection | `<h2>` heading + 4 use case cards (via v-for) |
+
+---
+
+### Target animation map
+
+**Section headings** — all use `animation="fade-up"` `:duration="700"` (no delay,
+triggered by IntersectionObserver, `eager` omitted):
+
+| Section | Element | animation | duration | delay |
+|---|---|---|---|---|
+| FeaturesSection | `<h2>` | `fade-up` | `700` | `0` |
+| FeaturesSection | each feature card (v-for) | `fade-up` | `600` | stagger via index * 100 |
+| CommunitySection | `<h2>` | `fade-up` | `700` | `0` |
+| CommunitySection | each feature list item (v-for) | `fade-right` | `600` | index * 80 |
+| CommunitySection | workflow card (right col) | `fade-left` | `700` | `100` |
+| ROIDashboard | `<h2>` | `fade-up` | `700` | `0` |
+| ROIDashboard | dashboard container `<div>` | `fade-up` | `800` | `150` |
+| ComparisonSection | `<h2>` | `fade-up` | `700` | `0` |
+| ComparisonSection | table wrapper `<div>` | `fade-up` | `700` | `150` |
+| PricingSection | `<h2>` | `fade-up` | `700` | `0` |
+| PricingSection | price tag `<div>` | `fade-up` | `700` | `150` |
+| CTASection | CTA inner card `<div>` | `fade-up` | `800` | `0` |
+| UseCasesSection | `<h2>` | `fade-up` | `700` | `0` |
+| UseCasesSection | each use case card (v-for) | `fade-up` | `600` | index * 100 |
+
+**v-for stagger pattern** — pass `:delay="index * 100"` (or `index * 80`) using the
+v-for index:
+```vue
+<AnimateIn
+  v-for="(card, index) in cards"
+  :key="card.title"
+  animation="fade-up"
+  :duration="600"
+  :delay="index * 100"
+>
+  <div :class="[card.bg, 'rounded-2xl p-6 flex flex-col']">
+    ...
+  </div>
+</AnimateIn>
+```
+Note: move `:key` to `<AnimateIn>` and remove it from the inner div. Move any
+`:class` binding to the inner div (AnimateIn's wrapper div must not carry the card's
+bg/border classes — those belong on the card div).
+
+**Removing reveal-hidden:**
+- Remove `reveal-hidden` class from every element that has it
+- Remove `import { useScrollReveal }` and `useScrollReveal()` call from each section
+- Do NOT delete the `composables/useScrollReveal.ts` file — that is a separate cleanup task
+
+---
+
+**Acceptance Criteria:**
+
+- [ ] All `reveal-hidden` class occurrences removed from target section components
+- [ ] All `useScrollReveal` imports and calls removed from target section components
+- [ ] `composables/useScrollReveal.ts` file is NOT deleted
+- [ ] `AnimateIn` imported in each of the 6 target sections
+- [ ] All section `<h2>` headings wrapped with AnimateIn
+- [ ] v-for cards in FeaturesSection and UseCasesSection staggered with `:delay="index * 100"`
+- [ ] CommunitySection feature list items staggered with `:delay="index * 80"`
+- [ ] `pnpm dev` starts with no console errors
+- [ ] No `<style>` block added to any file
+- [ ] No visual regression on any section
+- [ ] Branch `task/T-18c-section-animations` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ## Completion Checklist
 

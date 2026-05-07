@@ -1,12 +1,11 @@
 <script setup>
-import { useScrollReveal } from '~/composables/useScrollReveal'
 import SectionBase from '~/components/SectionBase.vue'
-
-useScrollReveal()
+import AnimateIn from '~/components/AnimateIn.vue'
 </script>
 
 <template>
   <SectionBase class="footer-bg py-16 px-6" label="Call to action">
+      <AnimateIn animation="fade-up" :duration="800">
       <div class="relative rounded-2xl overflow-hidden px-8 py-14 text-center" style="background: #3730A3">
 
         <!-- Decorative circle -->
@@ -15,7 +14,7 @@ useScrollReveal()
           aria-hidden="true"
         ></div>
 
-        <h2 class="reveal-hidden relative text-white text-3xl sm:text-4xl font-bold leading-tight mb-4">
+        <h2 class="relative text-white text-3xl sm:text-4xl font-bold leading-tight mb-4">
           Scale Your Documentation<br class="hidden sm:block"> With Confidence.
         </h2>
 
@@ -31,5 +30,6 @@ useScrollReveal()
         </a>
 
       </div>
+      </AnimateIn>
   </SectionBase>
 </template>

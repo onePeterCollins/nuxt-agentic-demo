@@ -3,12 +3,14 @@ import { ref, onMounted } from 'vue'
 import AppLogo from '~/components/AppLogo.vue'
 import Button from '~/components/buttons/Button.vue'
 
-const menuOpen = ref(false)
-const navReady = ref(false)
+const menuOpen  = ref(false)
+const navReady  = ref(false)
+const isMounted = ref(false)
 
 onMounted(() => {
+  isMounted.value = true  // SSR rendered no style; now apply the off-screen state
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    navReady.value = true
+    navReady.value = true  // hidden state is painted — safe to slide in
   }))
 })
 </script>
@@ -17,7 +19,7 @@ onMounted(() => {
   <header
     id="app-nav"
     class="z-50 md:flex w-full md:w-[1920px] justify-between items-center md:absolute left-0 top-0 px-5 py-6 md:px-[120px] md:py-8"
-    :style="navReady
+    :style="!isMounted ? {} : navReady
       ? { transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1)' }
       : { transform: 'translateY(-110%)', transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1)' }"
   >

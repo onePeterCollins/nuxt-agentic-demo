@@ -148,4 +148,4 @@ All entrance animations are driven by `AnimateIn.vue` — a zero-dependency wrap
 - **Firebase Auth flow** — A sign-in page and protected dashboard route to complete the auth loop.
 - **Nuxt Content integration** — Move section copy to Markdown/YAML content files so the site is editable without touching Vue components.
 - **Responsive rework** — Replace the CSS `transform: scale()` shortcut on fixed-pixel section layouts with fluid typography and percentage-based grids, improving sharpness at all viewport sizes.
-- **Pixelay visual regression** — Capture Figma overlays at 375px, 768px, and 1440px and diff against screenshots to quantify remaining pixel-level gaps.
+- **Pixelay visual regression** — Capture Figma overlays at 375px, 768px, and 1440px and diff against screenshots to quantify remaining pixel-level gaps. Pixelay project: https://technidox-nuxt-demo-39881.web.app/?pixelay_project_id=movmypssnw72e

@@ -172,6 +172,7 @@ import AnimateIn from '~/components/AnimateIn.vue'
   .scaled {
     transform: scale(calc(98.5vw / 1920px));
     transform-origin: top left;
+    margin-bottom: calc(98.5vw * 0.5625 - 1080px);
   }
 
   .hero-text {

@@ -4,10 +4,8 @@ import GitNetworkIcon from '~/components/icons/GitNetworkIcon.vue'
 import TargetIcon from '~/components/icons/TargetIcon.vue'
 import ArrowRightIcon from '~/components/icons/ArrowRightIcon.vue'
 import LockIcon from '~/components/icons/LockIcon.vue'
-import { useScrollReveal } from '~/composables/useScrollReveal'
 import SectionBase from '~/components/SectionBase.vue'
-
-useScrollReveal()
+import AnimateIn from '~/components/AnimateIn.vue'
 
 const cards = [
   {
@@ -77,9 +75,11 @@ const cards = [
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           USE CASES
         </p>
-        <h2 id="usecases-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <AnimateIn animation="fade-up" :duration="700">
+        <h2 id="usecases-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Built For Every Team That Ships Code.
         </h2>
+        </AnimateIn>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
           From open source maintainers to enterprise engineering teams, TechniDox adapts to how your team works.
         </p>
@@ -87,11 +87,16 @@ const cards = [
 
       <!-- Card grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div
-          v-for="card in cards"
+        <AnimateIn
+          v-for="(card, index) in cards"
           :key="card.title"
+          animation="fade-up"
+          :duration="600"
+          :delay="index * 100"
+        >
+        <div
           :class="[
-            'reveal-hidden rounded-2xl p-6 sm:p-8',
+            'rounded-2xl p-6 sm:p-8 h-full',
             card.isDark ? '' : 'bg-white border border-gray-200'
           ]"
           :style="card.isDark ? 'background: #2A2882' : ''"
@@ -138,6 +143,7 @@ const cards = [
             </li>
           </ul>
         </div>
+        </AnimateIn>
       </div>
 
   </SectionBase>

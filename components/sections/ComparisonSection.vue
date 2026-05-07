@@ -1,8 +1,6 @@
 <script setup>
-import { useScrollReveal } from '~/composables/useScrollReveal'
 import SectionBase from '~/components/SectionBase.vue'
-
-useScrollReveal()
+import AnimateIn from '~/components/AnimateIn.vue'
 
 const rows = [
   { capability: 'AI-native architecture', traditional: false },
@@ -26,15 +24,18 @@ const rows = [
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           WHY TECHNIDOX
         </p>
-        <h2 id="comparison-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <AnimateIn animation="fade-up" :duration="700">
+        <h2 id="comparison-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Not Just Another Documentation Tool
         </h2>
+        </AnimateIn>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
           See how TechniDox stacks up against traditional documentation approaches.
         </p>
       </div>
 
       <!-- Table wrapper -->
+      <AnimateIn animation="fade-up" :duration="700" :delay="150">
       <div class="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm max-w-5xl mx-auto">
         <table class="w-full min-w-[560px]">
           <thead>
@@ -74,6 +75,7 @@ const rows = [
           </tbody>
         </table>
       </div>
+      </AnimateIn>
 
   </SectionBase>
 </template>

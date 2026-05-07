@@ -1,8 +1,6 @@
 <script setup>
-import { useScrollReveal } from '~/composables/useScrollReveal'
 import SectionBase from '~/components/SectionBase.vue'
-
-useScrollReveal()
+import AnimateIn from '~/components/AnimateIn.vue'
 
 const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
 </script>
@@ -15,15 +13,18 @@ const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           ROI &amp; ANALYTICS
         </p>
-        <h2 id="roi-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <AnimateIn animation="fade-up" :duration="700">
+        <h2 id="roi-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Measurable Impact From Day One
         </h2>
+        </AnimateIn>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
           Track the real business value of better documentation with live dashboards your executives will love.
         </p>
       </div>
 
       <!-- Dashboard container -->
+      <AnimateIn animation="fade-up" :duration="800" :delay="150">
       <div class="rounded-2xl p-6 sm:p-8" style="background: #0D0C2A">
 
         <!-- Dashboard header -->
@@ -167,5 +168,6 @@ const avatarColors = ['#22C55E', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899']
 
         </div>
       </div>
+      </AnimateIn>
   </SectionBase>
 </template>

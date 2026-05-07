@@ -4,10 +4,8 @@ import BadgeIcon from '~/components/icons/BadgeIcon.vue'
 import LightningIcon from '~/components/icons/LightningIcon.vue'
 import PeopleIcon from '~/components/icons/PeopleIcon.vue'
 import GitBranchIcon from '~/components/icons/GitBranchIcon.vue'
-import { useScrollReveal } from '~/composables/useScrollReveal'
 import SectionBase from '~/components/SectionBase.vue'
-
-useScrollReveal()
+import AnimateIn from '~/components/AnimateIn.vue'
 
 const features = [
   {
@@ -49,9 +47,11 @@ const features = [
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           COMMUNITY
         </p>
+        <AnimateIn animation="fade-up" :duration="700">
         <h2 id="community-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Community-Driven Improvement At Scale
         </h2>
+        </AnimateIn>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
           Harness the power of your developer community to continuously improve documentation quality through structured contribution workflows.
         </p>
@@ -62,11 +62,14 @@ const features = [
 
         <!-- Left column: feature list -->
         <div class="space-y-8">
-          <div
-            v-for="feature in features"
+          <AnimateIn
+            v-for="(feature, index) in features"
             :key="feature.title"
-            class="flex gap-4"
+            animation="fade-right"
+            :duration="600"
+            :delay="index * 80"
           >
+          <div class="flex gap-4">
             <div :class="[feature.iconBg, 'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-1']">
               <component :is="feature.icon" :class="feature.iconColor" />
             </div>
@@ -75,9 +78,11 @@ const features = [
               <p class="text-gray-500 text-sm leading-relaxed">{{ feature.description }}</p>
             </div>
           </div>
+          </AnimateIn>
         </div>
 
         <!-- Right column: workflow steps card -->
+        <AnimateIn animation="fade-left" :duration="700" :delay="100">
         <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
 
           <!-- Step 1 -->
@@ -135,6 +140,7 @@ const features = [
           </div>
 
         </div>
+        </AnimateIn>
       </div>
   </SectionBase>
 </template>

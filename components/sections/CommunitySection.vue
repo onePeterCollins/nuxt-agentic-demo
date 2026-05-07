@@ -5,6 +5,7 @@ import LightningIcon from '~/components/icons/LightningIcon.vue'
 import PeopleIcon from '~/components/icons/PeopleIcon.vue'
 import GitBranchIcon from '~/components/icons/GitBranchIcon.vue'
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 
@@ -41,8 +42,7 @@ const features = [
 </script>
 
 <template>
-  <section class="bg-white py-20 px-6" aria-labelledby="community-heading">
-    <div class="max-w-[1920px] mx-auto">
+  <SectionBase class="bg-white py-20 px-6" labelledby="community-heading">
 
       <!-- Section header -->
       <div class="text-center mb-14">
@@ -136,6 +136,5 @@ const features = [
 
         </div>
       </div>
-    </div>
-  </section>
+  </SectionBase>
 </template>

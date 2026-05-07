@@ -1,12 +1,13 @@
 <script setup>
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 </script>
 
 <template>
-  <section class="bg-white py-20 px-6" aria-label="Pricing">
-    <div class="max-w-[1920px] mx-auto text-center">
+  <SectionBase class="bg-white py-20 px-6" label="Pricing">
+    <div class="text-center">
 
       <h2 class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-12">
         Plans Built For Every Stage Of Growth
@@ -44,5 +45,5 @@ useScrollReveal()
       </a>
 
     </div>
-  </section>
+  </SectionBase>
 </template>

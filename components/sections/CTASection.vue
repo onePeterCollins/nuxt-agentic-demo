@@ -1,12 +1,12 @@
 <script setup>
 import { useScrollReveal } from '~/composables/useScrollReveal'
+import SectionBase from '~/components/SectionBase.vue'
 
 useScrollReveal()
 </script>
 
 <template>
-  <section class="footer-bg py-16 px-6" aria-label="Call to action">
-    <div class="max-w-[1920px] mx-auto">
+  <SectionBase class="footer-bg py-16 px-6" label="Call to action">
       <div class="relative rounded-2xl overflow-hidden px-8 py-14 text-center" style="background: #3730A3">
 
         <!-- Decorative circle -->
@@ -31,6 +31,5 @@ useScrollReveal()
         </a>
 
       </div>
-    </div>
-  </section>
+  </SectionBase>
 </template>

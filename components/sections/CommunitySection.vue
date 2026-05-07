@@ -4,6 +4,9 @@ import BadgeIcon from '~/components/icons/BadgeIcon.vue'
 import LightningIcon from '~/components/icons/LightningIcon.vue'
 import PeopleIcon from '~/components/icons/PeopleIcon.vue'
 import GitBranchIcon from '~/components/icons/GitBranchIcon.vue'
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
 
 const features = [
   {
@@ -39,7 +42,7 @@ const features = [
 
 <template>
   <section class="bg-white py-20 px-6" aria-labelledby="community-heading">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
 
       <!-- Section header -->
       <div class="text-center mb-14">

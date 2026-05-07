@@ -10,14 +10,28 @@ html {
   scroll-behavior: smooth;
 }
 
+.hero-grid-bg {
+  background: radial-gradient(circle at 25% 10%, rgba(66, 56, 158, 0.12), transparent 28%), linear-gradient(180deg, #e9e7fa 0%, #fdfdff 78%);
+}
+
 .hero-grid-bg::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url('~/assets/images/technidox-hero-grid.svg');
-  background-size: cover;
-  background-position: center;
+  background-size: 1920px 1080px;
+  background-position: top left;
+  background-repeat: no-repeat;
   pointer-events: none;
+}
+
+.hero-grid-bg::after {
+  background-image: radial-gradient(circle, rgba(66, 56, 158, 0.15) 2px, transparent 2.4px);
+  background-size: 39px 39px;
+  content: "";
+  inset: 0;
+  opacity: 0.16;
+  position: absolute;
 }
 
 .footer-bg {
@@ -28,7 +42,8 @@ html {
   clip-path: polygon(
     50% 0%, 60% 5%, 70% 2%, 77% 8%, 87% 7%, 92% 15%,
     100% 18%, 100% 30%, 97% 40%, 100% 50%, 97% 60%,
-    100% 70%, 95% 80%, 100% 90%, 92% 95%, 85% 100%,
+ 
+   100% 70%, 95% 80%, 100% 90%, 92% 95%, 85% 100%,
     75% 97%, 65% 100%, 55% 96%, 50% 100%, 45% 96%,
     35% 100%, 25% 97%, 15% 100%, 8% 95%, 0% 90%,
     5% 80%, 0% 70%, 3% 60%, 0% 50%, 3% 40%,
@@ -64,3 +79,16 @@ html {
   opacity: 0;
   transform: translateY(-8px);
 }
+
+/* Scroll reveal animations */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+

@@ -4,6 +4,9 @@ import GitNetworkIcon from '~/components/icons/GitNetworkIcon.vue'
 import TargetIcon from '~/components/icons/TargetIcon.vue'
 import ArrowRightIcon from '~/components/icons/ArrowRightIcon.vue'
 import LockIcon from '~/components/icons/LockIcon.vue'
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
 
 const cards = [
   {
@@ -67,14 +70,14 @@ const cards = [
 
 <template>
   <section class="bg-white py-20 px-6" aria-labelledby="usecases-heading">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
 
       <!-- Section header -->
       <div class="text-center mb-12">
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           USE CASES
         </p>
-        <h2 id="usecases-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <h2 id="usecases-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Built For Every Team That Ships Code.
         </h2>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
@@ -88,7 +91,7 @@ const cards = [
           v-for="card in cards"
           :key="card.title"
           :class="[
-            'rounded-2xl p-6 sm:p-8',
+            'reveal-hidden rounded-2xl p-6 sm:p-8',
             card.isDark ? '' : 'bg-white border border-gray-200'
           ]"
           :style="card.isDark ? 'background: #2A2882' : ''"

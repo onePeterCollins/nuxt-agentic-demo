@@ -1,4 +1,8 @@
 <script setup>
+import { useScrollReveal } from '~/composables/useScrollReveal'
+
+useScrollReveal()
+
 const rows = [
   { capability: 'AI-native architecture', traditional: false },
   { capability: 'Confidence scoring per doc', traditional: false },
@@ -15,14 +19,14 @@ const rows = [
 
 <template>
   <section class="bg-white py-20 px-6" aria-labelledby="comparison-heading">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1920px] mx-auto">
 
       <!-- Section header -->
       <div class="text-center mb-12">
         <p class="text-brand-orange font-semibold text-xs tracking-widest uppercase mb-3">
           WHY TECHNIDOX
         </p>
-        <h2 id="comparison-heading" class="text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
+        <h2 id="comparison-heading" class="reveal-hidden text-3xl sm:text-4xl font-bold text-brand-indigo mb-4">
           Not Just Another Documentation Tool
         </h2>
         <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">

@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen">
-    <AppNav />
     <main>
       <HeroSection />
       <FeaturesSection />

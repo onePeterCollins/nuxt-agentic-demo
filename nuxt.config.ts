@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   nitro: { preset: 'static' },
 
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-vuefire'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-vuefire', '@nuxt/image'],
 
   components: [
     { path: '~/components', pathPrefix: false }
@@ -33,9 +33,11 @@ export default defineNuxtConfig({
         }
       ],
       link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,700;1,9..40,800&display=swap'
+          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,100..800;1,100..800&family=Inter:wght@100..900&family=Merriweather+Sans:wght@300..800&family=Montserrat:wght@100..900&family=SUSE:wght@100..800&display=swap'
         }
       ]
     }

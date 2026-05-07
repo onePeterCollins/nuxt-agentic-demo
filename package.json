@@ -22,6 +22,7 @@
     "tailwindcss": "^3.4.4"
   },
   "dependencies": {
+    "@nuxt/image": "^2.0.0",
     "firebase": "^12.12.1",
     "firebase-admin": "^13.8.0",
     "nuxt-vuefire": "^1.1.2"

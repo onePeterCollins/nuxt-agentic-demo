@@ -1,48 +1,48 @@
 <script setup>
 import { ref } from 'vue'
 import AppLogo from '~/components/AppLogo.vue'
+import Button from '~/components/buttons/Button.vue'
 
 const menuOpen = ref(false)
 </script>
 
 <template>
-  <header class="absolute top-0 left-0 right-0 z-50 px-6 py-4">
-    <nav class="max-w-7xl mx-auto flex items-center justify-between">
+  <header id="app-nav" class="z-50 md:flex w-full md:w-[1920px] justify-between items-center md:absolute left-0 top-0 px-5 py-6 md:px-[120px] md:py-8">
+    <nav class="flex w-full justify-between items-center">
       <AppLogo />
 
       <!-- Desktop nav links -->
       <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
         <li>
           <a href="#"
-             class="font-semibold text-brand-indigo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+              class="font-semibold text-brand-indigo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
             Home
           </a>
         </li>
         <li>
           <a href="#"
-             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+              class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
             About Us
           </a>
         </li>
         <li>
           <a href="#"
-             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+              class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
             Docs
           </a>
         </li>
         <li>
           <a href="#"
-             class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
+              class="text-gray-500 hover:text-brand-indigo transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo rounded-sm">
             Pricing
           </a>
         </li>
       </ul>
 
       <!-- Desktop CTA button -->
-      <a href="#"
-         class="hidden md:inline-flex bg-brand-indigo text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-brand-indigo-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
+      <Button variant="solid" class="hidden md:flex text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo">
         Get Started
-      </a>
+      </Button>
 
       <!-- Hamburger button -->
       <button
@@ -68,7 +68,7 @@ const menuOpen = ref(false)
     <!-- Mobile menu -->
     <Transition name="mobile-menu">
       <div v-if="menuOpen"
-           class="md:hidden mt-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/60 overflow-hidden">
+           class="md:hidden absolute left-5 w-[calc(96.5vw-2.5rem)] mt-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/60 overflow-hidden">
         <ul class="flex flex-col py-2 list-none m-0 p-0">
           <li>
             <a href="#"
@@ -99,11 +99,9 @@ const menuOpen = ref(false)
             </a>
           </li>
           <li class="px-6 py-3">
-            <a href="#"
-               class="block bg-brand-indigo text-white rounded-lg text-center text-sm font-medium py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo"
-               @click="menuOpen = false">
+            <Button variant="solid" class="w-full justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-indigo" :onClick="() => menuOpen = false">
               Get Started
-            </a>
+            </Button>
           </li>
         </ul>
       </div>

@@ -66,6 +66,8 @@ Failing criteria block the commit. Missing PR blocks task completion.
 | T-14 | Accessibility pass | T-04–T-12 | `task/T-14-accessibility` | 20 min |
 | T-15 | Firebase deploy config | T-01 | `task/T-15-firebase-config` | 10 min |
 | T-16 | README + pixelay/notes.md | T-15 | `task/T-16-readme-docs` | 15 min |
+| T-17a | SectionBase component | T-16 | `task/T-17a-section-base-component` | 15 min |
+| T-17b | SectionBase refactor | T-17a | `task/T-17b-section-base-refactor` | 30 min |
 
 ---
 
@@ -1777,6 +1779,201 @@ Example structure only (write original content based on the actual implementatio
 - [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
+
+---
+
+---
+
+## T-17a — SectionBase Component
+
+**Goal:** Create `components/SectionBase.vue` — a slot-based wrapper that encodes the
+shared `<section>` + `<div class="max-w-[1920px] mx-auto">` skeleton used across all
+section components. The component uses Vue's default attribute inheritance (`inheritAttrs: true`)
+so consumers pass any Tailwind classes or inline styles directly as `class`/`style`
+attributes, giving full styling flexibility without artificial prop constraints.
+
+**Branch:** `task/T-17a-section-base-component`
+
+**Depends On:** T-16 ✅
+
+**Why this task exists:**
+Every section component repeats the same outer skeleton:
+```html
+<section class="bg-white py-20 px-6" aria-labelledby="...">
+  <div class="max-w-[1920px] mx-auto">
+    ...content...
+  </div>
+</section>
+```
+`SectionBase` codifies this in one place. The 3-prop design (no `bg`/`py`/`px` props)
+lets Vue's attribute inheritance merge any `class` or `style` directly onto `<section>`,
+giving consumers the full Tailwind + CSS surface. This means a section can pass
+`class="relative overflow-hidden hero-grid-bg"` and pseudo-element backgrounds work
+correctly — the `.hero-grid-bg::before` and `::after` overlays require the parent
+`<section>` to have `position: relative`, which is supplied by the consumer's `relative`
+class, not hardcoded into SectionBase.
+
+---
+
+### Design spec
+
+`SectionBase.vue` accepts exactly 3 explicit props:
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `label` | `String` | `undefined` | Maps to `aria-label` on `<section>` |
+| `labelledby` | `String` | `undefined` | Maps to `aria-labelledby` on `<section>` — takes precedence over `label` |
+| `constrain` | `Boolean` | `true` | When `true`, wraps slot in `<div class="max-w-[1920px] mx-auto">` |
+
+All other styling (`bg-white`, `py-20`, `px-6`, etc.) is passed by the consumer as a
+`class` attribute and merged onto `<section>` automatically by Vue's attribute inheritance.
+
+Rules:
+- `labelledby` takes precedence: when both `label` and `labelledby` are provided,
+  only `aria-labelledby` is rendered; `aria-label` is suppressed.
+- When `constrain` is `false`, slot content renders directly inside `<section>` with
+  no inner wrapper div.
+- The component must use `<script setup>` and `defineProps`.
+- The default slot is the only slot required.
+- No `<style>` block.
+- Do not set `inheritAttrs: false` — the default (`true`) is required for class passthrough.
+
+---
+
+### Prompt to agent
+
+```
+Read assets/css/main.css and tailwind.config.js in full before starting.
+
+Create components/SectionBase.vue with the following exact content:
+
+<script setup>
+defineProps({
+  label:      { type: String,  default: undefined },
+  labelledby: { type: String,  default: undefined },
+  constrain:  { type: Boolean, default: true }
+})
+</script>
+
+<template>
+  <section
+    :aria-label="labelledby ? undefined : (label || undefined)"
+    :aria-labelledby="labelledby || undefined"
+  >
+    <div v-if="constrain" class="max-w-[1920px] mx-auto">
+      <slot />
+    </div>
+    <slot v-else />
+  </section>
+</template>
+
+Do not add a <style> block. Do not set inheritAttrs: false. Do not add any props
+beyond the 3 listed above.
+
+After creating the file, run pnpm dev and confirm no console errors are introduced
+by the new file. SectionBase is not used by any section yet — this task only creates
+the component.
+```
+
+---
+
+**Acceptance Criteria:**
+
+- [ ] `components/SectionBase.vue` exists with `<script setup>` and exactly 3 props
+      (`label`, `labelledby`, `constrain`)
+- [ ] `SectionBase.vue` has no `<style>` block
+- [ ] `SectionBase.vue` does not set `inheritAttrs: false`
+- [ ] `SectionBase.vue` uses a single default `<slot />`
+- [ ] When `constrain=true` (default), slot content is wrapped in
+      `<div class="max-w-[1920px] mx-auto">`
+- [ ] When `constrain=false`, slot content renders directly inside `<section>` with
+      no wrapper div
+- [ ] When `labelledby` is provided, `aria-label` is not rendered on `<section>`
+- [ ] When only `label` is provided (no `labelledby`), `aria-label` is rendered
+- [ ] `pnpm dev` starts with no console errors after adding the file
+- [ ] No existing component is modified in this task
+- [ ] Branch `task/T-17a-section-base-component` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
+
+---
+
+## T-17b — SectionBase Refactor
+
+**Goal:** Refactor all 7 target section components to use `SectionBase` as their root,
+replacing the repeated `<section class="..."> + <div class="max-w-[1920px] mx-auto">`
+boilerplate with `<SectionBase class="...">`. `HeroSection.vue` is exempt.
+
+**Branch:** `task/T-17b-section-base-refactor`
+
+**Depends On:** T-17a ✅ (must be merged to `main` before this branch is cut)
+
+---
+
+### Prompt to agent
+
+```
+Read assets/css/main.css, tailwind.config.js, and components/SectionBase.vue in full
+before starting. Read each target component before editing it.
+
+For each component in the mapping table below:
+1. Add `import SectionBase from '~/components/SectionBase.vue'` to <script setup>
+2. Replace the outermost `<section class="...">` opening tag with
+   `<SectionBase class="[classes]" [aria props]>`
+3. Remove the `<div class="max-w-[1920px] mx-auto">` immediately inside (SectionBase
+   renders this wrapper when constrain=true, which is the default)
+4. Replace the matching `</section>` closing tag with `</SectionBase>`
+5. Remove the matching `</div>` for the max-w wrapper you removed in step 3
+
+Mapping table:
+
+| Component | class to pass | labelledby | label | constrain |
+|---|---|---|---|---|
+| FeaturesSection.vue | "bg-white py-20 px-6" | "features-heading" | — | true (default) |
+| CommunitySection.vue | "bg-white py-20 px-6" | "community-heading" | — | true (default) |
+| ROIDashboard.vue | "bg-white py-20 px-6" | "roi-heading" | — | true (default) |
+| ComparisonSection.vue | "bg-white py-20 px-6" | "comparison-heading" | — | true (default) |
+| PricingSection.vue | "bg-white py-20 px-6" | — | "Pricing" | true (default) |
+| UseCasesSection.vue | "bg-white py-20 px-6" | "usecases-heading" | — | true (default) |
+| CTASection.vue | "footer-bg py-16 px-6" | — | "Call to action" | true (default) |
+
+Notes:
+- HeroSection.vue must NOT be modified — it has a unique scaled/transform structure
+  that SectionBase does not model.
+- Since constrain defaults to true, you do not need to pass the constrain prop
+  explicitly for any section in this table.
+- ROIDashboard: the inner <div class="max-w-[1920px] mx-auto"> wraps both the section
+  header AND the dark dashboard container. Remove that div — SectionBase renders it.
+  The dashboard container's style="background: #0D0C2A" stays on its own inner div
+  unchanged.
+- After each edit, verify the template nesting depth is identical to the original
+  (same number of wrapping elements around the deepest child node).
+- Omit the constrain prop entirely when using the default (true) — do not write
+  :constrain="true" explicitly.
+
+After all 7 components are refactored, run pnpm dev and verify:
+1. No console errors
+2. All sections render visually identical to before the refactor
+3. Each section's root element in the browser DOM is <section>, not <div>
+4. aria-labelledby / aria-label attributes are present on each <section> as before
+```
+
+---
+
+**Acceptance Criteria:**
+
+- [ ] All 7 target components import `SectionBase` from `~/components/SectionBase.vue`
+- [ ] All 7 target components use `<SectionBase>` as their root element
+- [ ] Each component passes its section classes via `class` attribute on `<SectionBase>`
+- [ ] Each component's `aria-labelledby` or `aria-label` is passed as the correct prop
+- [ ] The `<div class="max-w-[1920px] mx-auto">` wrapper is removed from each component
+      (SectionBase renders it internally)
+- [ ] `HeroSection.vue` is **not** modified
+- [ ] No section that previously used `aria-labelledby` now uses `aria-label` (or vice versa)
+- [ ] `pnpm dev` starts with no console errors after all refactors
+- [ ] No `<style>` block added to any file in this task
+- [ ] No visual regression — all sections render identically before and after
+- [ ] Branch `task/T-17b-section-base-refactor` pushed to `origin`
+- [ ] PR created against `main` via `gh pr create` and URL reported
 
 ---
 
